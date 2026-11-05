@@ -1,0 +1,6 @@
+---
+description: Project rules (canonical source is CLAUDE.md)
+alwaysApply: true
+---
+
+Read and follow `CLAUDE.md` at the repo root. It defines commands, structure (app → views → features → components/ui), invariants, approval rules, testing policy and git rules. Scoped details: `styling.mdc`, `react-next.mdc`, `i18n.mdc`, `testing.mdc`.

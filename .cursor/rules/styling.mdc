@@ -1,0 +1,16 @@
+---
+description: SCSS Modules and design tokens
+globs: "**/*.scss"
+alwaysApply: false
+---
+
+- One `Component.module.scss` per component, imported as `styles`; compose classes with `cn()` from `@/lib/utils/cn`.
+- Every value is a token: `var(--space-*)`, `var(--color-*)`, `var(--radius-*)`, `var(--text-*)`, `var(--duration-*)`, `var(--z-*)`, `var(--shadow-*)`. No raw hex, px spacing or magic z-index.
+- Missing value → add a **semantic** token to `src/styles/tokens/_scale.scss` or `_themes.scss` (`--shadow-card-hover`, not `--shadow-3`), with a dark-theme value if it is a color.
+- Raw palette (`tokens/_palette.scss`) is used only inside `_themes.scss`.
+- Breakpoints: mobile-first `@include bp-up(md) { ... }`, or `bp-down(lg)`. Names: sm 480, md 768, lg 1024, xl 1280, 2xl 1536.
+- Mixins: `focus-ring`, `visually-hidden`, `reset-button`, `truncate`, `line-clamp($n)`, `transition($props...)`.
+- Global element rules only in `src/styles/_reset.scss` / `_base.scss`, wrapped in `:where()` (zero specificity).
+- Motion: durations from tokens (they collapse under `prefers-reduced-motion`); reveal effects must not depend on JS (no content stuck at `opacity: 0`).
+- Logical properties (`margin-inline`, `padding-block`, `inset-inline-start`).
+- Banned: gradients, gradient text, glow blobs, glassmorphism, eyebrow kickers, identical icon-card grids, Tailwind, inline `style`.

@@ -1,0 +1,13 @@
+---
+description: Internationalization and editable texts
+globs: "src/**/*.tsx,messages/*.json"
+alwaysApply: false
+---
+
+- No hardcoded user-facing text in JSX, `aria-label`, `alt`, `title` or `placeholder`. Use `useTranslations('ns')` (client) or `await getTranslations('ns')` (server).
+- Keys are grouped by screen/feature namespace (`contact.submit`), camelCase, describing meaning not wording.
+- Add the key to every file in `messages/` in the same change (`pnpm check` fails on missing/extra keys).
+- Interpolate with ICU (`"{count, plural, one {# item} other {# items}}"`), never string concatenation.
+- Dates, numbers and currency via `useFormatter()` / `getFormatter()`.
+- Components never import message files. Texts come from `loadMessages()` (`src/i18n/messages.ts`), which can be switched to a CMS/DB (`docs/recipes/remote-messages.md`).
+- Intentional literals (brand mark, code sample): add `// i18n-ignore` with a reason.

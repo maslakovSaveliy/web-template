@@ -1,0 +1,17 @@
+---
+description: React and Next.js conventions
+globs: "src/**/*.{ts,tsx}"
+alwaysApply: false
+---
+
+- Layers: `app/**/page.tsx` (thin: params, metadata, server fetch) → `views/<Name>View` (composition only) → `features/<domain>` (logic) → `components/` (shared blocks) → `ui/` (primitives).
+- Views never call APIs, use data hooks or hold business logic. If a view needs data, the page fetches it and passes props.
+- Features expose a barrel `index.ts`; outside code imports `@/features/<x>`, not deep paths.
+- Server Components by default. `'use client'` only where needed, pushed to leaves. No async client components.
+- Data: server data in Server Components or route handlers; client data via TanStack Query hooks inside the feature (`use-<thing>.ts`) calling `apiFetch` with a Zod `schema`.
+- Mutations: `useMutation` + route handler or server action validated with the same Zod schema as the form.
+- Forms: react-hook-form + `zodResolver`; schema error messages are i18n keys.
+- Metadata: `createPageMetadata({ path, title, description, noIndex })` from `@/lib/seo`; private pages `noIndex: true`.
+- Async APIs (`params`, `searchParams`, `cookies()`, `headers()`) are awaited.
+- Errors: `notFound()`, `redirect()` before streaming; `error.tsx` never renders `error.message`.
+- No `useEffect` for derived state or data fetching.

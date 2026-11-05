@@ -1,0 +1,13 @@
+---
+description: Testing conventions
+globs: "**/*.test.{ts,tsx},e2e/**/*.ts"
+alwaysApply: false
+---
+
+- Tests sit next to code: `Thing.tsx` + `Thing.test.tsx`.
+- Render with `renderWithProviders` from `@/test/render` (i18n + QueryClient). Query by role, label or text; avoid test ids.
+- Assert behavior from the requirement (states: loading, empty, error, success), not implementation details.
+- Mock the network at `fetch` (`vi.stubGlobal('fetch', ...)`), not internal modules.
+- Bugfix: write the failing test first and keep it.
+- E2E (`e2e/`): user flows and states against the production build; use message keys from `messages/*.json` instead of copy-pasted strings; axe for each new page in light and dark.
+- No `.only`; `.skip` needs a reason in the title.
