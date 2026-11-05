@@ -57,7 +57,9 @@ if (pkg.name !== TEMPLATE_PACKAGE_NAME) {
 }
 
 const insideGit = git('rev-parse', '--is-inside-work-tree') === 'true';
-if (insideGit && !options.force && git('status', '--porcelain')) {
+// A fresh repo without commits (just scaffolded) has nothing to lose: skip the dirty check.
+const hasCommits = insideGit && git('rev-parse', '--verify', 'HEAD') !== undefined;
+if (hasCommits && !options.force && git('status', '--porcelain')) {
   fail('Working tree has uncommitted changes. Commit or stash them, or pass --force.');
 }
 
