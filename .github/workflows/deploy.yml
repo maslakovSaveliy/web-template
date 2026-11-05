@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       sha:
-        description: 'Commit sha to deploy (image tag). Empty = latest main.'
+        description: "Commit sha to deploy (image tag). Empty = latest main."
         required: false
 
 permissions:

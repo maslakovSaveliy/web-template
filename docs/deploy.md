@@ -22,16 +22,16 @@ Never build on the server. Never use the `latest` tag.
 
 ## GitHub settings
 
-| Kind | Name | Value |
-|---|---|---|
-| Environment | `production` | Add required reviewer = owner |
-| Variable | `NEXT_PUBLIC_SITE_URL` | `https://example.com` |
-| Variable | `NEXT_PUBLIC_API_URL` | `/` or the API origin |
-| Variable | `DEPLOY_PATH` | `/srv/<project>` |
-| Secret | `DEPLOY_HOST`, `DEPLOY_USER` | server address and user |
-| Secret | `DEPLOY_SSH_KEY` | private key of a deploy-only key pair |
-| Secret | `DEPLOY_KNOWN_HOSTS` | output of `ssh-keyscan <host>` |
-| Secret | `GHCR_READ_TOKEN` | the `read:packages` token |
+| Kind        | Name                         | Value                                 |
+| ----------- | ---------------------------- | ------------------------------------- |
+| Environment | `production`                 | Add required reviewer = owner         |
+| Variable    | `NEXT_PUBLIC_SITE_URL`       | `https://example.com`                 |
+| Variable    | `NEXT_PUBLIC_API_URL`        | `/` or the API origin                 |
+| Variable    | `DEPLOY_PATH`                | `/srv/<project>`                      |
+| Secret      | `DEPLOY_HOST`, `DEPLOY_USER` | server address and user               |
+| Secret      | `DEPLOY_SSH_KEY`             | private key of a deploy-only key pair |
+| Secret      | `DEPLOY_KNOWN_HOSTS`         | output of `ssh-keyscan <host>`        |
+| Secret      | `GHCR_READ_TOKEN`            | the `read:packages` token             |
 
 GitHub Free has no branch protection on private repos: the `pre-push` hook blocks pushes to `main`, and the PR template asks for green CI.
 
