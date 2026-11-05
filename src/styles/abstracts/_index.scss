@@ -1,1 +1,4 @@
-// placeholder, filled in A2
+// Injected into every *.module.scss via next.config.ts `sassOptions.additionalData`.
+// Must emit no CSS — only mixins, functions and Sass variables.
+@forward 'breakpoints' as bp-*;
+@forward 'mixins';

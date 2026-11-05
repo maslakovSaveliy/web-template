@@ -1,0 +1,41 @@
+// Raw palette. Never use these outside tokens/_themes.scss.
+// Replace with brand values per project (keep the same step names).
+
+$neutral: (
+  0: #ffffff,
+  50: #f7f7f6,
+  100: #efefed,
+  200: #e2e2df,
+  300: #cbcbc7,
+  400: #a3a39e,
+  500: #7b7b76,
+  600: #5c5c58,
+  700: #43433f,
+  800: #2b2b28,
+  900: #1c1c1a,
+  950: #121211,
+);
+
+// One muted accent. Pick a real brand hue per project.
+$accent: (
+  100: #e6ecf5,
+  300: #9fb4d6,
+  500: #3d5f99,
+  600: #324f80,
+  700: #273e66,
+);
+
+$danger: (
+  500: #b42318,
+  300: #f0a39c,
+);
+
+$success: (
+  500: #1f7a4d,
+  300: #94d3b2,
+);
+
+$warning: (
+  500: #9a5b00,
+  300: #f2c97d,
+);

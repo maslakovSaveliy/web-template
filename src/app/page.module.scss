@@ -1,0 +1,11 @@
+.root {
+  padding: var(--space-4);
+
+  @include bp-up(md) {
+    padding: var(--space-8);
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+}

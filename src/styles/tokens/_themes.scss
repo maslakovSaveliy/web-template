@@ -1,0 +1,45 @@
+@use 'sass:map';
+@use 'palette' as p;
+
+// Semantic color tokens. Components use only these (via var(--color-*)).
+:root {
+  color-scheme: light;
+  --color-bg: #{map.get(p.$neutral, 0)};
+  --color-bg-subtle: #{map.get(p.$neutral, 50)};
+  --color-surface: #{map.get(p.$neutral, 0)};
+  --color-surface-raised: #{map.get(p.$neutral, 50)};
+  --color-text: #{map.get(p.$neutral, 900)};
+  --color-text-muted: #{map.get(p.$neutral, 600)};
+  --color-border: #{map.get(p.$neutral, 200)};
+  --color-border-strong: #{map.get(p.$neutral, 400)};
+  --color-accent: #{map.get(p.$accent, 500)};
+  --color-accent-hover: #{map.get(p.$accent, 600)};
+  --color-accent-subtle: #{map.get(p.$accent, 100)};
+  --color-accent-contrast: #{map.get(p.$neutral, 0)};
+  --color-danger: #{map.get(p.$danger, 500)};
+  --color-success: #{map.get(p.$success, 500)};
+  --color-warning: #{map.get(p.$warning, 500)};
+  --color-focus: #{map.get(p.$accent, 500)};
+  --color-overlay: rgb(18 18 17 / 0.48);
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+  --color-bg: #{map.get(p.$neutral, 950)};
+  --color-bg-subtle: #{map.get(p.$neutral, 900)};
+  --color-surface: #{map.get(p.$neutral, 900)};
+  --color-surface-raised: #{map.get(p.$neutral, 800)};
+  --color-text: #{map.get(p.$neutral, 50)};
+  --color-text-muted: #{map.get(p.$neutral, 400)};
+  --color-border: #{map.get(p.$neutral, 800)};
+  --color-border-strong: #{map.get(p.$neutral, 600)};
+  --color-accent: #{map.get(p.$accent, 300)};
+  --color-accent-hover: #{map.get(p.$accent, 100)};
+  --color-accent-subtle: #{map.get(p.$accent, 700)};
+  --color-accent-contrast: #{map.get(p.$neutral, 950)};
+  --color-danger: #{map.get(p.$danger, 300)};
+  --color-success: #{map.get(p.$success, 300)};
+  --color-warning: #{map.get(p.$warning, 300)};
+  --color-focus: #{map.get(p.$accent, 300)};
+  --color-overlay: rgb(0 0 0 / 0.64);
+}

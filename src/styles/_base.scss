@@ -1,0 +1,22 @@
+:where(html) {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 100%;
+}
+
+:where(body) {
+  font-size: var(--text-md);
+  font-weight: var(--weight-regular);
+}
+
+:where(::selection) {
+  background-color: var(--color-accent-subtle);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :where(*, *::before, *::after) {
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}

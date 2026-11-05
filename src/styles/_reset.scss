@@ -1,0 +1,57 @@
+// Modern reset. Element rules are wrapped in :where() so they carry zero
+// specificity and never fight component module styles.
+:where(*, *::before, *::after) {
+  box-sizing: border-box;
+}
+
+:where(*) {
+  margin: 0;
+}
+
+:where(html) {
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
+}
+
+:where(body) {
+  min-height: 100dvh;
+  line-height: var(--leading-normal);
+  -webkit-font-smoothing: antialiased;
+}
+
+:where(img, picture, video, canvas, svg) {
+  display: block;
+  max-width: 100%;
+}
+
+:where(input, button, textarea, select) {
+  font: inherit;
+  color: inherit;
+}
+
+:where(p, h1, h2, h3, h4, h5, h6) {
+  overflow-wrap: break-word;
+}
+
+:where(h1, h2, h3, h4, h5, h6) {
+  text-wrap: balance;
+  line-height: var(--leading-tight);
+}
+
+:where(p) {
+  text-wrap: pretty;
+}
+
+:where(a) {
+  color: inherit;
+}
+
+:where(ul[role='list'], ol[role='list']) {
+  list-style: none;
+  padding: 0;
+}
+
+:where(:focus-visible) {
+  outline: var(--focus-ring-width) solid var(--color-focus);
+  outline-offset: var(--focus-ring-offset);
+}
