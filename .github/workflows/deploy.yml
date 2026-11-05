@@ -1,0 +1,52 @@
+name: Deploy
+
+# Manual only. Pulls an image already built by release.yml, checks /api/health,
+# rolls back to the previous image if the new one is not healthy.
+on:
+  workflow_dispatch:
+    inputs:
+      sha:
+        description: 'Commit sha to deploy (image tag). Empty = latest main.'
+        required: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: production
+    steps:
+      - id: target
+        env:
+          INPUT_SHA: ${{ inputs.sha }}
+        run: |
+          echo "sha=${INPUT_SHA:-$GITHUB_SHA}" >> "$GITHUB_OUTPUT"
+          echo "image=ghcr.io/${GITHUB_REPOSITORY,,}" >> "$GITHUB_OUTPUT"
+      - name: Deploy over SSH
+        env:
+          SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          HOST: ${{ secrets.DEPLOY_HOST }}
+          USER: ${{ secrets.DEPLOY_USER }}
+          KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+          DEPLOY_PATH: ${{ vars.DEPLOY_PATH }}
+          IMAGE: ${{ steps.target.outputs.image }}
+          TAG: ${{ steps.target.outputs.sha }}
+          REGISTRY_TOKEN: ${{ secrets.GHCR_READ_TOKEN }}
+          REGISTRY_USER: ${{ github.repository_owner }}
+        run: |
+          set -euo pipefail
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/id_deploy && chmod 600 ~/.ssh/id_deploy
+          printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+          # Values go through stdin (not ssh argv) so the registry token never shows up in `ps`.
+          {
+            printf 'export DEPLOY_PATH=%q IMAGE=%q TAG=%q REGISTRY_USER=%q REGISTRY_TOKEN=%q\n' \
+              "$DEPLOY_PATH" "$IMAGE" "$TAG" "$REGISTRY_USER" "$REGISTRY_TOKEN"
+            cat scripts/deploy/remote.sh
+          } | ssh -i ~/.ssh/id_deploy "$USER@$HOST" sh -s

@@ -1,0 +1,29 @@
+# Production runtime on the VPS. The image is built in CI and pulled by commit sha.
+# Deploy: IMAGE=ghcr.io/<owner>/<repo> TAG=<sha> docker compose up -d
+services:
+  web:
+    image: ${IMAGE:?set IMAGE}:${TAG:?set TAG}
+    container_name: web-template-web # TEMPLATE:container
+    env_file: .env
+    ports:
+      # Bound to localhost: the reverse proxy (Caddy/nginx) terminates TLS in front.
+      - '127.0.0.1:${APP_PORT:-3000}:3000'
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /app/.next/cache
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ['CMD', 'wget', '-qO-', 'http://127.0.0.1:3000/api/health']
+      interval: 15s
+      timeout: 3s
+      retries: 3
+      start_period: 20s
+    # Ship logs to Loki (needs the loki docker driver on the host):
+    # logging:
+    #   driver: loki
+    #   options:
+    #     loki-url: 'https://${LOKI_USER}:${LOKI_PASSWORD}@${LOKI_HOST}/loki/api/v1/push'
+    #     labels: app

@@ -1,0 +1,85 @@
+# GitLab alternative to .github/workflows. `pnpm template:init --ci gitlab` keeps this
+# file and removes .github/workflows; `--ci github` (default) removes this file.
+stages: [verify, release, deploy]
+
+variables:
+  NEXT_PUBLIC_SITE_URL: http://localhost:3000
+  NEXT_TELEMETRY_DISABLED: '1'
+  LEFTHOOK: '0'
+
+.node:
+  image: node:24-alpine
+  before_script:
+    - corepack enable
+    - pnpm config set store-dir .pnpm-store
+    - pnpm install --frozen-lockfile
+  cache:
+    key:
+      files: [pnpm-lock.yaml]
+    paths: [.pnpm-store, .next/cache]
+
+verify:
+  extends: .node
+  stage: verify
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  script:
+    - pnpm check
+    - pnpm typecheck
+    - pnpm test
+    - pnpm knip
+    - pnpm build
+
+e2e:
+  stage: verify
+  image: mcr.microsoft.com/playwright:v1.64.1-noble
+  needs: [verify]
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+  before_script:
+    - corepack enable
+    - pnpm install --frozen-lockfile
+  script:
+    - pnpm e2e
+  artifacts:
+    when: on_failure
+    paths: [playwright-report]
+    expire_in: 7 days
+
+release:
+  stage: release
+  image: docker:27
+  services: [docker:27-dind]
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login "$CI_REGISTRY" -u "$CI_REGISTRY_USER" --password-stdin
+    - >
+      docker build
+      --build-arg NEXT_PUBLIC_SITE_URL="$PROD_SITE_URL"
+      --build-arg NEXT_PUBLIC_API_URL="${PROD_API_URL:-/}"
+      -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHA" .
+    - docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHA"
+
+deploy:
+  stage: deploy
+  image: alpine:3.22
+  needs: [release]
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      when: manual
+  before_script:
+    # bash: the runner prefers it when present, and the script uses printf %q
+    - apk add --no-cache openssh-client bash
+    - install -m 700 -d ~/.ssh
+    - printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/id_deploy && chmod 600 ~/.ssh/id_deploy
+    - printf '%s\n' "$DEPLOY_KNOWN_HOSTS" > ~/.ssh/known_hosts
+  script:
+    # Values go through stdin (not ssh argv) so the registry token never shows up in `ps`.
+    - |
+      {
+        printf 'export DEPLOY_PATH=%q IMAGE=%q TAG=%q REGISTRY_USER=%q REGISTRY_TOKEN=%q\n' \
+          "$DEPLOY_PATH" "$CI_REGISTRY_IMAGE" "$CI_COMMIT_SHA" "$CI_DEPLOY_USER" "$CI_DEPLOY_PASSWORD"
+        cat scripts/deploy/remote.sh
+      } | ssh -i ~/.ssh/id_deploy "$DEPLOY_USER@$DEPLOY_HOST" sh -s
