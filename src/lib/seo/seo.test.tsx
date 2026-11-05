@@ -10,6 +10,10 @@ describe('createPageMetadata', () => {
     expect(meta.title).toBe('About');
   });
 
+  it('omits title when none is given so the layout default applies', () => {
+    expect(createPageMetadata({ path: '/' })).not.toHaveProperty('title');
+  });
+
   it('marks private pages noindex', () => {
     const meta = createPageMetadata({ path: '/account', noIndex: true });
     expect(meta.robots).toMatchObject({ index: false, follow: false });

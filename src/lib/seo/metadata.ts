@@ -19,7 +19,8 @@ export const createPageMetadata = ({
   image,
   noIndex = false,
 }: PageMetadataInput): Metadata => ({
-  title,
+  // Omit when undefined: an explicit `title: undefined` would wipe the layout's default title.
+  ...(title ? { title } : {}),
   description,
   alternates: { canonical: path },
   openGraph: {

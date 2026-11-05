@@ -2,6 +2,9 @@ import type { NextConfig } from 'next';
 import createNextIntlPlugin from 'next-intl/plugin';
 
 const isDev = process.env.NODE_ENV === 'development';
+// WebKit applies upgrade-insecure-requests even on http://localhost and then fails to load
+// CSS/JS, so only send it when the site is actually served over HTTPS.
+const isHttpsSite = process.env.NEXT_PUBLIC_SITE_URL?.startsWith('https://') ?? false;
 
 /**
  * Baseline CSP that works with static rendering. Next inlines bootstrap scripts,
@@ -19,7 +22,7 @@ const contentSecurityPolicy = [
   "base-uri 'self'",
   "form-action 'self'",
   "frame-ancestors 'none'",
-  ...(isDev ? [] : ['upgrade-insecure-requests']),
+  ...(isHttpsSite ? ['upgrade-insecure-requests'] : []),
 ].join('; ');
 
 const securityHeaders = [
