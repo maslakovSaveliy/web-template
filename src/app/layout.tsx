@@ -1,10 +1,51 @@
 import '@/styles/globals.scss';
+import type { Metadata, Viewport } from 'next';
+import { getLocale, getTranslations } from 'next-intl/server';
 import type { ReactNode } from 'react';
+import { SiteFooter, SiteHeader } from '@/components';
+import { siteConfig } from '@/config/site';
+import { AppProviders } from '@/providers';
+import styles from './layout.module.scss';
 
-export default function RootLayout({ children }: { children: ReactNode }): ReactNode {
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('metadata');
+  return {
+    metadataBase: new URL(siteConfig.url),
+    title: { default: t('title'), template: `%s | ${siteConfig.name}` },
+    description: t('description'),
+    applicationName: siteConfig.name,
+    formatDetection: { email: false, address: false, telephone: false },
+  };
+}
+
+export const viewport: Viewport = {
+  themeColor: siteConfig.themeColor,
+  colorScheme: 'light dark',
+};
+
+export default async function RootLayout({
+  children,
+}: {
+  children: ReactNode;
+}): Promise<ReactNode> {
+  const locale = await getLocale();
+  const t = await getTranslations('common');
+
   return (
-    <html lang="en">
-      <body>{children}</body>
+    // suppressHydrationWarning: next-themes sets data-theme on <html> before hydration.
+    <html lang={locale} suppressHydrationWarning>
+      <body className={styles.body}>
+        <AppProviders>
+          <a href="#main" className={styles.skipLink}>
+            {t('skipToContent')}
+          </a>
+          <SiteHeader />
+          <main id="main" className={styles.main}>
+            {children}
+          </main>
+          <SiteFooter />
+        </AppProviders>
+      </body>
     </html>
   );
 }

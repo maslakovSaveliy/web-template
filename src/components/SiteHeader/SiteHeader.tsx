@@ -1,0 +1,32 @@
+import Link from 'next/link';
+import { getTranslations } from 'next-intl/server';
+import type { ReactNode } from 'react';
+import { siteConfig } from '@/config/site';
+import { Container } from '../Container';
+import { ThemeToggle } from '../ThemeToggle';
+import styles from './SiteHeader.module.scss';
+
+export async function SiteHeader(): Promise<ReactNode> {
+  const t = await getTranslations('header');
+
+  return (
+    <header className={styles.header}>
+      <Container className={styles.inner}>
+        <Link href="/" className={styles.brand}>
+          {siteConfig.shortName}
+        </Link>
+        <nav aria-label={t('nav')} className={styles.nav}>
+          <ul className={styles.links}>
+            <li>
+              <Link href="/">{t('home')}</Link>
+            </li>
+            <li>
+              <Link href="/contact">{t('contact')}</Link>
+            </li>
+          </ul>
+          <ThemeToggle />
+        </nav>
+      </Container>
+    </header>
+  );
+}

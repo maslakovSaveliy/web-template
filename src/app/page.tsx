@@ -1,5 +1,10 @@
-import styles from './page.module.scss';
+import type { Metadata } from 'next';
+import type { ReactNode } from 'react';
+import { createPageMetadata } from '@/lib/seo';
+import { HomeView } from '@/views';
 
-export default function HomePage(): React.ReactNode {
-  return <main className={styles.root}>ok</main>;
+export const metadata: Metadata = createPageMetadata({ path: '/' });
+
+export default function HomePage(): ReactNode {
+  return <HomeView />;
 }

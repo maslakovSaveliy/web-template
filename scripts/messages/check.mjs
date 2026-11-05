@@ -26,15 +26,20 @@ export const diffKeys = (base, other) => {
 // Text between a closing `>` of a tag and the next `<`/`{`, containing a letter.
 const JSX_TEXT = />([^<>{}]*\p{L}[^<>{}]*)</gu;
 
+// Blank out comments (keeping newlines) so `<html>` in a comment is not read as JSX.
+const stripComments = (source) =>
+  source.replace(/\/\*[\s\S]*?\*\/|\/\/[^\n]*/g, (comment) => comment.replace(/[^\n]/g, ' '));
+
 export const findHardcodedText = (source) => {
   if (source.includes('// i18n-ignore')) return [];
+  const code = stripComments(source);
   const hits = [];
-  for (const match of source.matchAll(JSX_TEXT)) {
+  for (const match of code.matchAll(JSX_TEXT)) {
     const text = match[1].trim();
     if (!text) continue;
     // Skip TypeScript generics / comparisons like `a > b && c < d` inside expressions.
     if (/[=;()&|]/.test(text)) continue;
-    const line = source.slice(0, match.index).split('\n').length;
+    const line = code.slice(0, match.index).split('\n').length;
     hits.push({ line, text });
   }
   return hits;

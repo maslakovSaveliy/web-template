@@ -1,0 +1,29 @@
+.body {
+  display: flex;
+  flex-direction: column;
+  min-block-size: 100dvh;
+}
+
+.main {
+  flex: 1;
+  padding-block: var(--space-12);
+
+  @include bp-up(md) {
+    padding-block: var(--space-16);
+  }
+}
+
+.skipLink {
+  position: absolute;
+  inset-inline-start: var(--space-4);
+  inset-block-start: calc(-1 * var(--space-16));
+  z-index: var(--z-toast);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  background-color: var(--color-accent);
+  color: var(--color-accent-contrast);
+
+  &:focus-visible {
+    inset-block-start: var(--space-4);
+  }
+}

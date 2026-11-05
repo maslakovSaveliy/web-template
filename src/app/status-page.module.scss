@@ -1,0 +1,15 @@
+.root {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-4);
+}
+
+.title {
+  font-size: var(--text-3xl);
+  font-weight: var(--weight-semibold);
+}
+
+.description {
+  color: var(--color-text-muted);
+  max-inline-size: 60ch;
+}

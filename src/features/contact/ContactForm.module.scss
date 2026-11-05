@@ -1,0 +1,17 @@
+.form {
+  display: grid;
+  gap: var(--space-5);
+  max-inline-size: 36rem;
+}
+
+.actions {
+  display: flex;
+}
+
+.success {
+  color: var(--color-success);
+}
+
+.error {
+  color: var(--color-danger);
+}

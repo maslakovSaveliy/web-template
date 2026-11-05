@@ -1,0 +1,41 @@
+.root {
+  display: grid;
+  gap: var(--space-6);
+  max-inline-size: 48rem;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: var(--text-4xl);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-tight);
+}
+
+.lead {
+  font-size: var(--text-lg);
+  color: var(--color-text-muted);
+  max-inline-size: 60ch;
+}
+
+.steps {
+  display: grid;
+  gap: var(--space-3);
+  padding-block-start: var(--space-6);
+  border-block-start: var(--border-width) solid var(--color-border);
+}
+
+.stepsTitle {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+}
+
+.list {
+  display: grid;
+  gap: var(--space-2);
+  padding-inline-start: var(--space-5);
+}
+
+.link {
+  color: var(--color-accent);
+  text-underline-offset: 0.2em;
+}

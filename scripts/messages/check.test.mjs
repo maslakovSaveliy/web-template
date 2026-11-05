@@ -25,6 +25,17 @@ describe('findHardcodedText', () => {
     assert.deepEqual(findHardcodedText(source), []);
   });
 
+  it('ignores tags mentioned inside comments', () => {
+    const source =
+      '// sets data-theme on <html> before hydration.\nconst A = () => <p>{t("x")}</p>;';
+    assert.deepEqual(findHardcodedText(source), []);
+  });
+
+  it('reports the correct line number', () => {
+    const hits = findHardcodedText('/* a\n b */\nconst A = () => (\n  <p>Hello</p>\n);');
+    assert.equal(hits[0].line, 4);
+  });
+
   it('respects the i18n-ignore marker', () => {
     assert.deepEqual(findHardcodedText('// i18n-ignore\nconst A = () => <p>Brand</p>;'), []);
   });
