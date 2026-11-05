@@ -1,0 +1,27 @@
+# deps
+/node_modules
+.pnpm-store/
+
+# next
+/.next/
+/out/
+next-env.d.ts
+*.tsbuildinfo
+
+# tests
+/coverage
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+
+# env — only the example is committed
+.env*
+!.env.example
+
+# misc
+.DS_Store
+*.pem
+*.log
+.vercel
+.idea/
