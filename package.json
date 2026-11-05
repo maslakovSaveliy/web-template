@@ -11,15 +11,16 @@
     "dev": "next dev --port 3000",
     "build": "next build",
     "start": "next start --port 3000",
-    "check": "biome check .",
+    "check": "biome check . && node scripts/messages/check.mjs",
     "check:fix": "biome check --write .",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run && node --test scripts",
+    "test": "vitest run && node --test 'scripts/**/*.test.mjs'",
     "test:watch": "vitest",
     "e2e": "playwright test",
     "knip": "knip",
     "verify": "pnpm check && pnpm typecheck && pnpm test && pnpm build",
-    "template:init": "node scripts/init/index.mjs"
+    "template:init": "node scripts/init/index.mjs",
+    "test:scripts": "node --test 'scripts/**/*.test.mjs'"
   },
   "dependencies": {
     "@hookform/resolvers": "^7.0.0",
