@@ -25,3 +25,6 @@ next-env.d.ts
 *.log
 .vercel
 .idea/
+
+# local agent tooling state
+.planning/
