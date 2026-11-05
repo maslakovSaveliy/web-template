@@ -15,13 +15,13 @@ export class EnvValidationError extends Error {
 const relativeOrAbsoluteUrl = z.union([z.url(), z.string().startsWith('/')]);
 
 /** Public values only: everything here is inlined into the browser bundle. */
-export const clientEnvSchema = z.object({
+const clientEnvSchema = z.object({
   NEXT_PUBLIC_SITE_URL: z.url(),
   NEXT_PUBLIC_API_URL: relativeOrAbsoluteUrl.default('/'),
 });
 
 /** Server-only values. Validated at server start (src/instrumentation.ts), not at build. */
-export const serverEnvSchema = z.object({
+const serverEnvSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   APP_PORT: z.coerce.number().int().positive().default(3000),
 });

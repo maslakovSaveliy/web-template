@@ -10,7 +10,7 @@ export interface MessageSource {
   load(locale: Locale): Promise<Messages>;
 }
 
-export const localMessageSource: MessageSource = {
+const localMessageSource: MessageSource = {
   async load(locale) {
     const file = (await import(`../../messages/${locale}.json`)) as { default: Messages };
     return file.default;

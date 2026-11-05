@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import { contactSchema } from '@/features/contact/schema';
+import { contactSchema } from '@/features/contact';
 
 /**
  * Example route handler. Validates with the same schema as the form.

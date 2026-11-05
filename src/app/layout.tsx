@@ -4,6 +4,7 @@ import { getLocale, getTranslations } from 'next-intl/server';
 import type { ReactNode } from 'react';
 import { SiteFooter, SiteHeader } from '@/components';
 import { siteConfig } from '@/config/site';
+import { JsonLd } from '@/lib/seo';
 import { AppProviders } from '@/providers';
 import styles from './layout.module.scss';
 
@@ -35,6 +36,14 @@ export default async function RootLayout({
     // suppressHydrationWarning: next-themes sets data-theme on <html> before hydration.
     <html lang={locale} suppressHydrationWarning>
       <body className={styles.body}>
+        <JsonLd
+          data={{
+            '@context': 'https://schema.org',
+            '@type': 'WebSite',
+            name: siteConfig.name,
+            url: siteConfig.url,
+          }}
+        />
         <AppProviders>
           <a href="#main" className={styles.skipLink}>
             {t('skipToContent')}
