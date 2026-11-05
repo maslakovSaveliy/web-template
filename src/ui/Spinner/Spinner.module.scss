@@ -1,0 +1,33 @@
+.wrapper {
+  display: inline-flex;
+}
+
+.spinner {
+  display: inline-block;
+  border: var(--focus-ring-width) solid currentcolor;
+  border-inline-end-color: transparent;
+  border-radius: var(--radius-full);
+  animation: spin calc(var(--duration-slow) * 2.5) linear infinite;
+}
+
+.sm {
+  inline-size: var(--space-3);
+  block-size: var(--space-3);
+}
+
+.md {
+  inline-size: var(--space-5);
+  block-size: var(--space-5);
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation-duration: calc(var(--duration-slow) * 8);
+  }
+}
