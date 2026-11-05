@@ -10,6 +10,11 @@ export const normalizeSlug = (input) => {
   if (!raw || raw.includes('/') || raw.includes('\\') || raw.includes('..')) {
     throw new Error(`Invalid --name "${input}": use letters, digits, spaces or hyphens.`);
   }
+  if (/[^A-Za-z0-9 _-]/.test(raw)) {
+    throw new Error(
+      `Invalid --name "${input}": use Latin letters, digits, spaces or hyphens. Put the display name in --title.`,
+    );
+  }
   const slug = raw
     .toLowerCase()
     .replace(/[\s_]+/g, '-')

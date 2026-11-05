@@ -22,6 +22,10 @@ describe('normalizeSlug', () => {
     assert.throws(() => normalizeSlug('../x'), /name/);
     assert.throws(() => normalizeSlug('a/b'), /name/);
   });
+
+  it('rejects non-Latin names instead of silently dropping letters', () => {
+    assert.throws(() => normalizeSlug('Кофе Shop'), /--title/);
+  });
 });
 
 describe('parseOptions', () => {
