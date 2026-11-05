@@ -163,6 +163,19 @@ const recipeDeletes = (keepRecipes, recipes) => {
   return recipes.filter((name) => !keep.includes(name)).map((name) => `docs/recipes/${name}.md`);
 };
 
+const TEMPLATE_REPO_URL = 'https://github.com/maslakovSaveliy/web-template';
+
+/** Drops index rows of removed recipes and says where to find them. */
+export const pruneRecipeIndex = (source, removed) => {
+  if (removed.length === 0) return source;
+  const kept = source
+    .split('\n')
+    .filter((line) => !removed.some((name) => line.includes(`](${name}.md)`)))
+    .join('\n')
+    .trimEnd();
+  return `${kept}\n\nRemoved at init (still available in ${TEMPLATE_REPO_URL}/tree/main/docs/recipes): ${removed.join(', ')}.\n`;
+};
+
 /**
  * @param options result of parseOptions()
  * @param context { read(path): string, recipes: string[], templateVersion: string, today: string }
@@ -193,12 +206,21 @@ export const planInit = (options, context) => {
     ...locale.writes,
   ];
 
+  const removedRecipes = recipeDeletes(options.keepRecipes, context.recipes);
+  if (removedRecipes.length > 0) {
+    const names = removedRecipes.map((path) => path.replace(/^docs\/recipes\/|\.md$/g, ''));
+    writes.push({
+      path: 'docs/recipes/README.md',
+      content: pruneRecipeIndex(context.read('docs/recipes/README.md'), names),
+    });
+  }
+
   const deletes = [
     ci === 'github' ? '.gitlab-ci.yml' : '.github',
     'scripts/init',
     'docs/superpowers',
     ...locale.deletes,
-    ...recipeDeletes(options.keepRecipes, context.recipes),
+    ...removedRecipes,
   ];
 
   return { writes, deletes };

@@ -8,6 +8,7 @@ import {
   normalizeSlug,
   parseOptions,
   planInit,
+  pruneRecipeIndex,
 } from './transform.mjs';
 
 describe('normalizeSlug', () => {
@@ -108,6 +109,7 @@ describe('planInit', () => {
     'docs/decisions.md': '# Decisions\n',
     'global.d.ts': "import type messages from './messages/en.json';",
     'src/test/render.tsx': 'import messages from \'../../messages/en.json\';\nlocale="en"',
+    'docs/recipes/README.md': '| [payments](payments.md) | x |\n| [auth](auth.md) | y |',
     'e2e/smoke.spec.ts':
       "import messages from '../messages/en.json' with { type: 'json' };\n'lang', 'en'",
   };
@@ -163,5 +165,15 @@ describe('planInit', () => {
     const decisions = plan.writes.find((w) => w.path === 'docs/decisions.md')?.content ?? '';
     assert.match(decisions, /D-001/);
     assert.match(decisions, /abc1234/);
+  });
+});
+
+describe('pruneRecipeIndex', () => {
+  it('drops rows of removed recipes and lists them', () => {
+    const source = '| [payments](payments.md) | x |\n| [auth](auth.md) | y |';
+    const out = pruneRecipeIndex(source, ['auth']);
+    assert.match(out, /payments\.md/);
+    assert.doesNotMatch(out, /\(auth\.md\)/);
+    assert.match(out, /Removed at init .*: auth\./);
   });
 });
