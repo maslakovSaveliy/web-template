@@ -1,0 +1,27 @@
+language js
+
+// Hardcoded user-facing text in JSX. Tests and stories are exempt.
+// Intentional literal: {/* biome-ignore lint/plugin/no-hardcoded-jsx-text: <reason> */}
+or {
+  JsxText() as $node where { $node <: r"(?s).*\p{L}.*" },
+  JsxAttribute(name=$name, initializer=$value) as $node where {
+    $name <: or {
+      "alt",
+      "placeholder",
+      "title",
+      "label",
+      "aria-label",
+      "aria-description",
+      "aria-placeholder",
+      "aria-roledescription"
+    },
+    $value <: r"(?s)=?\s*\".*\p{L}.*\""
+  }
+} where {
+  $filename <: not or {
+    r".*\.test\.tsx",
+    r".*\.spec\.tsx",
+    r".*\.stories\.tsx"
+  },
+  register_diagnostic(span=$node, message="Hardcoded UI text. Put it in messages/<locale>.json and render it with t().")
+}

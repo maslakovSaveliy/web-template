@@ -1,7 +1,7 @@
+// biome-ignore-all lint/plugin/no-hardcoded-jsx-text: global-error replaces the root layout,
+// so providers (and translations) are unavailable here. Keep this text minimal and generic.
 'use client';
 
-// i18n-ignore: global-error replaces the root layout, so providers (and translations)
-// are unavailable here. Keep this text minimal and generic.
 import type { ReactNode } from 'react';
 
 export default function GlobalError({ reset }: { reset: () => void }): ReactNode {

@@ -110,6 +110,7 @@ describe('planInit', () => {
     'global.d.ts': "import type messages from './messages/en.json';",
     'src/test/render.tsx': 'import messages from \'../../messages/en.json\';\nlocale="en"',
     'docs/recipes/README.md': '| [payments](payments.md) | x |\n| [auth](auth.md) | y |',
+    'src/app/global-error.tsx': '    <html lang="en">',
     'e2e/smoke.spec.ts':
       "import messages from '../messages/en.json' with { type: 'json' };\n'lang', 'en'",
   };
@@ -158,6 +159,36 @@ describe('planInit', () => {
     assert.match(write('global.d.ts'), /messages\/ru\.json/);
     assert.match(write('src/test/render.tsx'), /locale="ru"/);
     assert.match(write('e2e/smoke.spec.ts'), /'lang', 'ru'/);
+  });
+
+  it('keeps $-patterns in user text literally', () => {
+    const plan = planInit(
+      parseOptions({ name: 'shop', description: 'Costs $$ and $& more' }),
+      context,
+    );
+    const claude = plan.writes.find((w) => w.path === 'CLAUDE.md')?.content ?? '';
+    assert.match(claude, /Costs \$\$ and \$& more/);
+  });
+
+  it('escapes ICU syntax in titles written to messages', () => {
+    const plan = planInit(parseOptions({ name: 'shop', title: "Bob's {Shop} <b>" }), context);
+    const messages = JSON.parse(
+      plan.writes.find((w) => w.path === 'messages/en.json')?.content ?? '{}',
+    );
+    assert.equal(messages.home.title, "Bob''s '{'Shop'}' '<'b>");
+  });
+
+  it('sets the global error page language', () => {
+    const plan = planInit(parseOptions({ name: 'shop', locale: 'ru' }), context);
+    assert.match(
+      plan.writes.find((w) => w.path === 'src/app/global-error.tsx')?.content ?? '',
+      /lang="ru"/,
+    );
+  });
+
+  it('writes package.json last so a failed run can be retried', () => {
+    const plan = planInit(parseOptions({ name: 'shop' }), context);
+    assert.equal(plan.writes.at(-1)?.path, 'package.json');
   });
 
   it('records the template version in decisions', () => {

@@ -13,7 +13,12 @@ permissions:
 
 jobs:
   image:
-    if: github.event.workflow_run.conclusion == 'success'
+    # workflow_run `branches` matches the head branch NAME, which a fork PR can also call "main":
+    # require a push event from this repository.
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.head_repository.full_name == github.repository
     runs-on: ubuntu-latest
     timeout-minutes: 20
     environment: production

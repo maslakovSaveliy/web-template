@@ -18,7 +18,7 @@
     "test:watch": "vitest",
     "e2e": "playwright test",
     "knip": "knip",
-    "verify": "pnpm check && pnpm typecheck && pnpm test && pnpm build",
+    "verify": "pnpm check && pnpm typecheck && pnpm test && pnpm knip && pnpm build",
     "template:init": "node scripts/init/index.mjs",
     "test:scripts": "node --test 'scripts/**/*.test.mjs'"
   },

@@ -6,8 +6,8 @@ on:
   workflow_dispatch:
     inputs:
       sha:
-        description: "Commit sha to deploy (image tag). Empty = latest main."
-        required: false
+        description: "Full commit sha to deploy (an image built by Release must exist for it)."
+        required: true
 
 permissions:
   contents: read
@@ -22,11 +22,16 @@ jobs:
     timeout-minutes: 10
     environment: production
     steps:
+      # Only for scripts/deploy/remote.sh; the app itself comes from the registry image.
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          sparse-checkout: scripts/deploy
       - id: target
         env:
           INPUT_SHA: ${{ inputs.sha }}
         run: |
-          echo "sha=${INPUT_SHA:-$GITHUB_SHA}" >> "$GITHUB_OUTPUT"
+          echo "sha=${INPUT_SHA}" >> "$GITHUB_OUTPUT"
           echo "image=ghcr.io/${GITHUB_REPOSITORY,,}" >> "$GITHUB_OUTPUT"
       - name: Deploy over SSH
         env:

@@ -10,4 +10,5 @@ alwaysApply: false
 - Interpolate with ICU (`"{count, plural, one {# item} other {# items}}"`), never string concatenation.
 - Dates, numbers and currency via `useFormatter()` / `getFormatter()`.
 - Components never import message files. Texts come from `loadMessages()` (`src/i18n/messages.ts`), which can be switched to a CMS/DB (`docs/recipes/remote-messages.md`).
-- Intentional literals (brand mark, code sample): add `// i18n-ignore` with a reason.
+- Intentional literals (brand mark, code sample): `{/* biome-ignore lint/plugin/no-hardcoded-jsx-text: <reason> */}` before the element (or `// biome-ignore-all ...` at the top of a file that cannot use translations, like `global-error.tsx`).
+- The plugin cannot see strings inside expressions (`{cond ? 'Open' : 'Close'}`): translate those too.

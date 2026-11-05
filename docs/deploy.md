@@ -37,7 +37,7 @@ GitHub Free has no branch protection on private repos: the `pre-push` hook block
 
 ## Deploy
 
-Actions → **Deploy** → Run workflow → optional `sha` (default: latest main). The job:
+Actions → **Deploy** → Run workflow → `sha` of a main commit whose **Release** run succeeded (docs-only commits skip CI, so they have no image). The job:
 
 1. Logs the server into GHCR, pulls `<image>:<sha>`.
 2. `docker compose up -d`.

@@ -9,10 +9,6 @@ services:
       # Bound to localhost: the reverse proxy (Caddy/nginx) terminates TLS in front.
       - "127.0.0.1:${APP_PORT:-3000}:3000"
     restart: unless-stopped
-    read_only: true
-    tmpfs:
-      - /tmp
-      - /app/.next/cache
     security_opt:
       - no-new-privileges:true
     healthcheck:

@@ -6,6 +6,17 @@ const isDev = process.env.NODE_ENV === 'development';
 // CSS/JS, so only send it when the site is actually served over HTTPS.
 const isHttpsSite = process.env.NEXT_PUBLIC_SITE_URL?.startsWith('https://') ?? false;
 
+// apiFetch may call an absolute API origin (NEXT_PUBLIC_API_URL); allow exactly that origin.
+const apiOrigin = ((): string => {
+  const value = process.env.NEXT_PUBLIC_API_URL;
+  if (!value?.startsWith('http')) return '';
+  try {
+    return ` ${new URL(value).origin}`;
+  } catch {
+    return '';
+  }
+})();
+
 /**
  * Baseline CSP that works with static rendering. Next inlines bootstrap scripts,
  * so script-src needs 'unsafe-inline' unless you switch to the nonce-based CSP
@@ -17,7 +28,7 @@ const contentSecurityPolicy = [
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob:",
   "font-src 'self' data:",
-  "connect-src 'self'",
+  `connect-src 'self'${apiOrigin}`,
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",
@@ -27,7 +38,8 @@ const contentSecurityPolicy = [
 
 const securityHeaders = [
   { key: 'Content-Security-Policy', value: contentSecurityPolicy },
-  { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
+  // Add `; includeSubDomains; preload` only when every subdomain is HTTPS-only (hard to undo).
+  { key: 'Strict-Transport-Security', value: 'max-age=63072000' },
   { key: 'X-Content-Type-Options', value: 'nosniff' },
   { key: 'X-Frame-Options', value: 'DENY' },
   { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },

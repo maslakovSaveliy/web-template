@@ -20,7 +20,7 @@ Stack: Next.js 16 (App Router, RSC) · React 19 · TypeScript 7 strict · SCSS M
 | Unit tests (all)           | `pnpm test` · one file: `pnpm vitest run src/path/file.test.tsx`             |
 | E2E (prod build)           | `pnpm e2e` · one project: `pnpm e2e --project=chromium`                      |
 | Unused code/deps           | `pnpm knip`                                                                  |
-| Everything before PR       | `pnpm verify`                                                                |
+| Everything before PR       | `pnpm verify` (check, types, tests, knip, build)                             |
 
 Locally run the tests you touched; CI runs the full suite.
 
@@ -47,7 +47,7 @@ Import features through their barrel (`@/features/contact`), never deep paths fr
 
 ## Invariants
 
-- Every user-facing string comes from `messages/<locale>.json` via `useTranslations`/`getTranslations`. `pnpm check` fails on hardcoded JSX text.
+- Every user-facing string comes from `messages/<locale>.json` via `useTranslations`/`getTranslations`. The Biome plugin `biome-plugins/no-hardcoded-jsx-text.grit` fails `pnpm check` on hardcoded JSX text and literal `alt`/`title`/`placeholder`/`aria-label`/`label`; strings inside `{expressions}` are not caught, so review them.
 - Every SCSS value comes from a token (`var(--space-4)`, `var(--color-text)`). Missing value → add a semantic token in `src/styles/tokens/` first. No Tailwind, no inline styles, no hex in modules.
 - Server state lives in TanStack Query; Zustand holds UI state only; never persist tokens or personal data in client stores.
 - `NEXT_PUBLIC_*` = public and inlined at build. Secrets only in server env (`src/lib/env/schema.ts`), validated at server start.

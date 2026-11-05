@@ -13,7 +13,8 @@
       "!**/coverage",
       "!**/playwright-report",
       "!**/test-results",
-      "!**/*.scss"
+      "!**/*.scss",
+      "!**/__fixtures__"
     ]
   },
   "formatter": {
@@ -95,5 +96,6 @@
         }
       }
     }
-  ]
+  ],
+  "plugins": ["./biome-plugins/no-hardcoded-jsx-text.grit"]
 }

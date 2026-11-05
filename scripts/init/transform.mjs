@@ -89,7 +89,15 @@ export const applyPackageJson = (json, slug) => {
 export const applyCompose = (source, slug) =>
   source.replace(/container_name: \S+( # TEMPLATE:container)/, `container_name: ${slug}-web$1`);
 
-const applyMessages = (json, { title, description }) => {
+// ICU MessageFormat: apostrophe escapes, braces and `<` (rich text tags) must be quoted.
+export const escapeIcu = (value) =>
+  String(value)
+    .replace(/'/g, "''")
+    .replace(/[{}<]/g, (char) => `'${char}'`);
+
+const applyMessages = (json, raw) => {
+  const title = escapeIcu(raw.title);
+  const description = escapeIcu(raw.description);
   const messages = JSON.parse(json);
   messages.metadata = { ...messages.metadata, title, description };
   messages.home = { ...messages.home, title };
@@ -147,6 +155,7 @@ const localeWrites = (options, context) => {
   swap('src/test/render.tsx', (s) =>
     s.replace('messages/en.json', messagesPath).replace('locale="en"', `locale="${locale}"`),
   );
+  swap('src/app/global-error.tsx', (s) => s.replace('lang="en"', `lang="${locale}"`));
   swap('e2e/smoke.spec.ts', (s) =>
     s.replace('messages/en.json', messagesPath).replace("'lang', 'en'", `'lang', '${locale}'`),
   );
@@ -186,7 +195,6 @@ export const planInit = (options, context) => {
   const locale = localeWrites(options, context);
 
   const writes = [
-    { path: 'package.json', content: applyPackageJson(context.read('package.json'), slug) },
     {
       path: 'src/config/site.ts',
       content: applySiteConfig(context.read('src/config/site.ts'), { title, description }),
@@ -196,7 +204,8 @@ export const planInit = (options, context) => {
       path: 'CLAUDE.md',
       content: context
         .read('CLAUDE.md')
-        .replace('<!-- TEMPLATE:project -->', `**${title}**: ${description}`),
+        // Replacer function: `$&`, `$$` in user text must stay literal.
+        .replace('<!-- TEMPLATE:project -->', () => `**${title}**: ${description}`),
     },
     {
       path: 'docs/decisions.md',
@@ -214,6 +223,12 @@ export const planInit = (options, context) => {
       content: pruneRecipeIndex(context.read('docs/recipes/README.md'), names),
     });
   }
+
+  // Last: index.mjs refuses to run once the package is renamed, so a failed run stays retryable.
+  writes.push({
+    path: 'package.json',
+    content: applyPackageJson(context.read('package.json'), slug),
+  });
 
   const deletes = [
     ci === 'github' ? '.gitlab-ci.yml' : '.github',
