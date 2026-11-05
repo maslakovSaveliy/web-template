@@ -91,6 +91,17 @@ if (options.dryRun) {
 for (const { path, content } of plan.writes) writeFileSync(join(ROOT, path), content);
 for (const path of plan.deletes) rmSync(join(ROOT, path), { recursive: true, force: true });
 
+// Generated files (README tables, JSON) must pass `pnpm check` right away.
+try {
+  execFileSync(
+    'pnpm',
+    ['exec', 'biome', 'format', '--write', ...plan.writes.map(({ path }) => path)],
+    { cwd: ROOT, stdio: 'ignore' },
+  );
+} catch {
+  console.warn('! Could not run Biome on generated files. Run `pnpm check:fix`.');
+}
+
 console.info(`✔ Initialized "${options.title}" (${options.slug}).
 
 Next:
