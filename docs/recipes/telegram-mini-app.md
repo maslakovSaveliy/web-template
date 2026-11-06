@@ -22,7 +22,7 @@ The product runs inside Telegram as a Mini App. The bot itself is a separate rep
 
 `TELEGRAM_BOT_TOKEN` (server only), `NEXT_PUBLIC_TELEGRAM_BOT_USERNAME`.
 
-## Rules to append to CLAUDE.md
+## Rules to append to AGENTS.md
 
 - Identity comes only from server-validated `initData`. Telegram ids are stored as bigint.
 - Do not rely on Telegram storage for personal data you are obliged to keep yourself.

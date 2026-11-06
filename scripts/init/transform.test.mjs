@@ -105,7 +105,7 @@ describe('planInit', () => {
       home: { title: 'T' },
     }),
     'docker-compose.yml': 'container_name: web-template-web # TEMPLATE:container',
-    'CLAUDE.md': '<!-- TEMPLATE:project -->',
+    'AGENTS.md': '<!-- TEMPLATE:project -->',
     'docs/decisions.md': '# Decisions\n',
     'global.d.ts': "import type messages from './messages/en.json';",
     'src/test/render.tsx': 'import messages from \'../../messages/en.json\';\nlocale="en"',
@@ -166,8 +166,8 @@ describe('planInit', () => {
       parseOptions({ name: 'shop', description: 'Costs $$ and $& more' }),
       context,
     );
-    const claude = plan.writes.find((w) => w.path === 'CLAUDE.md')?.content ?? '';
-    assert.match(claude, /Costs \$\$ and \$& more/);
+    const agents = plan.writes.find((w) => w.path === 'AGENTS.md')?.content ?? '';
+    assert.match(agents, /Costs \$\$ and \$& more/);
   });
 
   it('escapes ICU syntax in titles written to messages', () => {

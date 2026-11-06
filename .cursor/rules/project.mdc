@@ -1,6 +1,6 @@
 ---
-description: Project rules (canonical source is CLAUDE.md)
+description: Project rules (canonical source is AGENTS.md)
 alwaysApply: true
 ---
 
-Read and follow `CLAUDE.md` at the repo root. It defines commands, structure (app → views → features → components/ui), invariants, approval rules, testing policy and git rules. Scoped details: `styling.mdc`, `react-next.mdc`, `i18n.mdc`, `testing.mdc`.
+Read and follow `AGENTS.md` at the repo root (and `docs/agents/memory.md`). It defines commands, structure (app → views → features → components/ui), invariants, approval rules, testing policy and git rules. Scoped details: `styling.mdc`, `react-next.mdc`, `i18n.mdc`, `testing.mdc`.

@@ -27,7 +27,7 @@ None new.
 
 None.
 
-## Rules to append to CLAUDE.md
+## Rules to append to AGENTS.md
 
 - New keys are added to all locale files in the same change; untranslated text is marked `TODO(<locale>)` in the value, never left missing.
 

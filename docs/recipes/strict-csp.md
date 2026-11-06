@@ -22,7 +22,7 @@ None.
 
 None.
 
-## Rules to append to CLAUDE.md
+## Rules to append to AGENTS.md
 
 - Every page is dynamically rendered under the nonce CSP: account for it in caching and performance decisions.
 - New third-party origins are added explicitly to the policy with a reason.

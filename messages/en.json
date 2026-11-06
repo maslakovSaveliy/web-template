@@ -28,7 +28,7 @@
     "lead": "Replace this page with your product. Everything below the fold is yours.",
     "nextStepsTitle": "Next steps",
     "stepInit": "Run pnpm template:init to name the project.",
-    "stepDocs": "Read CLAUDE.md and docs/architecture.md.",
+    "stepDocs": "Read AGENTS.md and docs/architecture.md.",
     "stepBrand": "Set brand tokens in src/styles/tokens.",
     "contactLink": "See the example contact form"
   },

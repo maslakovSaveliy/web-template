@@ -24,7 +24,7 @@ A separate backend (NestJS) owns the data, or the team prefers Prisma's schema-f
 
 `DATABASE_URL` (server only; add to `serverEnvSchema`).
 
-## Rules to append to CLAUDE.md
+## Rules to append to AGENTS.md
 
 - Create migrations with `--create-only`, review the SQL, commit. `prisma migrate deploy` runs only in the deploy entrypoint, never by an agent (denied in `.claude/settings.json`).
 - Never `prisma db push` against shared databases.

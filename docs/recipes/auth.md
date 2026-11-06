@@ -27,7 +27,7 @@ Pick one (decision goes to `docs/decisions.md`):
 
 Provider secrets and session secret (server only), e.g. `AUTH_SECRET`, OAuth client ids/secrets.
 
-## Rules to append to CLAUDE.md
+## Rules to append to AGENTS.md
 
 - Authorization is checked in the data access function for every read/write (IDOR), not only in `proxy.ts` or the UI.
 - Sessions in httpOnly, Secure, SameSite=Lax cookies; no tokens in `localStorage` or persisted stores.
