@@ -25,7 +25,7 @@ CMS SDK if any (or plain `fetch`).
 
 `MESSAGES_API_URL`, `MESSAGES_API_TOKEN`, `REVALIDATE_SECRET` (server only).
 
-## Rules to append to CLAUDE.md
+## Rules to append to AGENTS.md
 
 - Keys are defined in `messages/<locale>.json` first (types come from it); the CMS can only override existing keys.
 - A CMS outage must not break pages: on error, fall back to local messages and log.

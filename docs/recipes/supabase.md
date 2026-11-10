@@ -23,7 +23,7 @@ A BaaS is justified: auth + Postgres + storage + realtime needed fast, little cu
 
 `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (public) · `SUPABASE_SECRET_KEY` (server only, bypasses RLS).
 
-## Rules to append to CLAUDE.md
+## Rules to append to AGENTS.md
 
 - RLS on for every table, policies tested. The secret key is used only in server code for admin tasks.
 - Migrations are SQL files; the owner applies them.

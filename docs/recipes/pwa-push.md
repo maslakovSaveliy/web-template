@@ -23,7 +23,7 @@ Users return often from mobile, need an app-like icon, offline shell or notifica
 
 `NEXT_PUBLIC_VAPID_PUBLIC_KEY` (public), `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT` (server).
 
-## Rules to append to CLAUDE.md
+## Rules to append to AGENTS.md
 
 - Never request notification permission on page load.
 - Marketing pushes need explicit consent (see `/legal-kit`).

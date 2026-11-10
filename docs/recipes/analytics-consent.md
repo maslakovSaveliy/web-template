@@ -23,7 +23,7 @@ Analytics SDK only; prefer self-hosted / privacy-friendly tools.
 
 `NEXT_PUBLIC_ANALYTICS_<PROVIDER>_ID` per provider (public), empty = disabled.
 
-## Rules to append to CLAUDE.md
+## Rules to append to AGENTS.md
 
 - No analytics request before consent. Consent changes take effect without reload; withdrawal is as easy as giving consent.
 - Do not send personal data (emails, names) as analytics properties.

@@ -21,7 +21,7 @@ You need interceptors with request retry/refresh flows, upload/download progress
 
 None new.
 
-## Rules to append to CLAUDE.md
+## Rules to append to AGENTS.md
 
 - All HTTP goes through `@/lib/api` (`apiFetch` facade). No direct `axios` imports in features.
 

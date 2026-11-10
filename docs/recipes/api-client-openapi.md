@@ -23,7 +23,7 @@ A separate backend (NestJS/FastAPI) publishes `openapi.json`. Types are shared t
 
 `NEXT_PUBLIC_API_URL` = backend origin (already in the schema).
 
-## Rules to append to CLAUDE.md
+## Rules to append to AGENTS.md
 
 - Never hand-edit `schema.d.ts`; regenerate after backend contract changes.
 - CI fails if the committed types drift from the backend's published spec (`pnpm api:types && git diff --exit-code`), when the spec is reachable from CI.
