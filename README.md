@@ -23,7 +23,7 @@ Or let the `product-architect` skill pick the stack for a whole product and scaf
 | Area      | Choice                                                                                                                                                |
 | --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Framework | Next.js 16 App Router, RSC, `output: 'standalone'`, typed routes                                                                                      |
-| Structure | `app → views → features → components → ui` (see CLAUDE.md)                                                                                            |
+| Structure | `app → views → features → components → ui` (see AGENTS.md)                                                                                            |
 | Styling   | SCSS Modules on CSS-variable tokens, light/dark themes, `:where()` reset, reduced motion                                                              |
 | Texts     | next-intl, single locale, all strings in `messages/`, swappable source for CMS texts                                                                  |
 | Data      | TanStack Query + typed `apiFetch` + Zod, one `ApiError` model                                                                                         |
@@ -33,7 +33,7 @@ Or let the `product-architect` skill pick the stack for a whole product and scaf
 | Git       | lefthook (Biome, secretlint, i18n, commitlint, pre-push typecheck/tests/main guard)                                                                   |
 | Security  | CSP + security headers, supply-chain guards in `pnpm-workspace.yaml`                                                                                  |
 | Delivery  | Multi-stage Docker (non-root, healthcheck), GitHub Actions (CI, GHCR release by sha, manual deploy with rollback), GitLab alternative                 |
-| Agents    | `CLAUDE.md` (canonical), `AGENTS.md`, `.cursor/rules`, `.claude/settings.json`, task + handoff templates                                              |
+| Agents    | `AGENTS.md` (canonical, any agent), `CLAUDE.md`/`GEMINI.md` imports, `.cursor/rules`, shared memory, task + handoff templates                         |
 | Recipes   | Postgres (Drizzle/Prisma), OpenAPI client, Supabase, auth, payments, locales, CMS texts, analytics consent, PWA, admin, Telegram Mini App, strict CSP |
 
 ## Commands
@@ -45,4 +45,4 @@ Or let the `product-architect` skill pick the stack for a whole product and scaf
 | `pnpm e2e`    | Playwright against a production build       |
 | `pnpm knip`   | Unused files, exports, dependencies         |
 
-Docs: [CLAUDE.md](CLAUDE.md) · [architecture](docs/architecture.md) · [decisions](docs/decisions.md) · [deploy](docs/deploy.md) · [recipes](docs/recipes/README.md)
+Docs: [AGENTS.md](AGENTS.md) · [memory](docs/agents/memory.md) · [architecture](docs/architecture.md) · [decisions](docs/decisions.md) · [deploy](docs/deploy.md) · [recipes](docs/recipes/README.md)

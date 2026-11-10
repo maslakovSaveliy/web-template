@@ -25,7 +25,7 @@ The web app owns its data and the backend logic fits in route handlers / server 
 
 `DATABASE_URL` (server only) → add to `serverEnvSchema` as `z.url()`; add to `.env.example` with the local 5433 URL.
 
-## Rules to append to CLAUDE.md
+## Rules to append to AGENTS.md
 
 - Migrations: `pnpm drizzle-kit generate` creates SQL; **never apply to shared/prod databases**: the owner applies them. Never edit a migration that left your machine.
 - Every query lives in `features/<x>/server/`; no DB access from components or views.

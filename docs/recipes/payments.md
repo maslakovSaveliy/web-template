@@ -24,7 +24,7 @@ Provider SDK only if it adds value over plain `fetch` (signature helpers). Nothi
 
 `PAYMENTS_PROVIDER`, `PAYMENTS_SECRET_KEY`, `PAYMENTS_WEBHOOK_SECRET` (server only); publishable key as `NEXT_PUBLIC_*` only if the provider requires it.
 
-## Rules to append to CLAUDE.md
+## Rules to append to AGENTS.md
 
 - Amounts are integers in minor units + ISO currency; no floats.
 - Webhooks are idempotent and verified; never mark paid from the browser redirect alone.

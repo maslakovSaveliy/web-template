@@ -1,8 +1,8 @@
 # Recipes
 
-Opt-in additions. Each recipe has the same sections: When to use, Verify first, Packages, Files, Env vars, Rules to append to CLAUDE.md, Tests to add, Pitfalls.
+Opt-in additions. Each recipe has the same sections: When to use, Verify first, Packages, Files, Env vars, Rules to append to AGENTS.md, Tests to add, Pitfalls.
 
-**Always start with "Verify first":** library APIs change fast; look them up with `/context7` before writing code. Adding packages, schemas or migrations needs owner approval (CLAUDE.md).
+**Always start with "Verify first":** library APIs change fast; look them up with `/context7` before writing code. Adding packages, schemas or migrations needs owner approval (AGENTS.md).
 
 | Recipe                                      | Use for                                                      |
 | ------------------------------------------- | ------------------------------------------------------------ |

@@ -127,7 +127,8 @@ pnpm dev
 
 ## Docs
 
-- \`CLAUDE.md\`: rules for humans and coding agents (start here)
+- \`AGENTS.md\`: rules for humans and every coding agent (start here; \`CLAUDE.md\` and \`GEMINI.md\` import it)
+- \`docs/agents/memory.md\`: shared project memory for all agents
 - \`docs/architecture.md\`: structure and boundaries
 - \`docs/decisions.md\`: decision log
 - \`docs/deploy.md\`: ${ci === 'gitlab' ? 'GitLab' : 'GitHub'} CI/CD and server setup
@@ -201,9 +202,9 @@ export const planInit = (options, context) => {
     },
     { path: 'docker-compose.yml', content: applyCompose(context.read('docker-compose.yml'), slug) },
     {
-      path: 'CLAUDE.md',
+      path: 'AGENTS.md',
       content: context
-        .read('CLAUDE.md')
+        .read('AGENTS.md')
         // Replacer function: `$&`, `$$` in user text must stay literal.
         .replace('<!-- TEMPLATE:project -->', () => `**${title}**: ${description}`),
     },

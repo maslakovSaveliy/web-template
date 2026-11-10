@@ -22,7 +22,7 @@ Internal back office: tables, filters, forms, charts. The owner prefers a ready 
 
 None new (auth required, see `auth.md`).
 
-## Rules to append to CLAUDE.md
+## Rules to append to AGENTS.md
 
 - Admin routes are `noIndex`, behind role checks in the data layer, excluded from `sitemap.ts`.
 - Mantine is allowed only inside `(admin)`; public UI stays on project tokens.
