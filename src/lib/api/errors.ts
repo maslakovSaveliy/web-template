@@ -1,4 +1,4 @@
-export type ApiErrorCode = 'network' | 'http' | 'parse' | 'validation';
+export type ApiErrorCode = 'network' | 'timeout' | 'http' | 'parse' | 'validation';
 
 export class ApiError extends Error {
   readonly status: number;

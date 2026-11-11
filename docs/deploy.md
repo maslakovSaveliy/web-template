@@ -18,6 +18,8 @@ Never build on the server. Never use the `latest` tag.
    }
    ```
 
+   Next already gzips responses and `encode` does not re-encode them; to serve zstd from the proxy instead, set `compress: false` in `next.config.ts` and compare bytes and CPU (`docs/performance.md`).
+
 4. Create a GitHub token with `read:packages` only (for pulling images).
 
 ## GitHub settings
