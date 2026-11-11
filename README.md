@@ -29,7 +29,7 @@ Or let the `product-architect` skill pick the stack for a whole product and scaf
 | Data      | TanStack Query + typed `apiFetch` + Zod, one `ApiError` model                                                                                         |
 | Forms     | react-hook-form + Zod (shared schema with route handler)                                                                                              |
 | Env       | Zod-validated: public at build, server at startup                                                                                                     |
-| Quality   | Biome, TypeScript 7 strict, Vitest + Testing Library, Playwright (Chromium + WebKit) + axe, knip                                                      |
+| Quality   | Biome, TypeScript 7 strict, Vitest + Testing Library, Playwright (Chromium + WebKit) + axe, knip, performance budget (`docs/performance.md`)          |
 | Git       | lefthook (Biome, secretlint, i18n, commitlint, pre-push typecheck/tests/main guard)                                                                   |
 | Security  | CSP + security headers, supply-chain guards in `pnpm-workspace.yaml`                                                                                  |
 | Delivery  | Multi-stage Docker (non-root, healthcheck), GitHub Actions (CI, GHCR release by sha, manual deploy with rollback), GitLab alternative                 |
@@ -45,4 +45,4 @@ Or let the `product-architect` skill pick the stack for a whole product and scaf
 | `pnpm e2e`    | Playwright against a production build       |
 | `pnpm knip`   | Unused files, exports, dependencies         |
 
-Docs: [AGENTS.md](AGENTS.md) · [memory](docs/agents/memory.md) · [architecture](docs/architecture.md) · [decisions](docs/decisions.md) · [deploy](docs/deploy.md) · [recipes](docs/recipes/README.md)
+Docs: [AGENTS.md](AGENTS.md) · [memory](docs/agents/memory.md) · [architecture](docs/architecture.md) · [decisions](docs/decisions.md) · [performance](docs/performance.md) · [deploy](docs/deploy.md) · [recipes](docs/recipes/README.md)

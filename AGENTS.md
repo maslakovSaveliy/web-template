@@ -20,6 +20,7 @@ Stack: Next.js 16 (App Router, RSC) · React 19 · TypeScript 7 strict · SCSS M
 | Types                      | `pnpm typecheck`                                                             |
 | Unit tests (all)           | `pnpm test` · one file: `pnpm vitest run src/path/file.test.tsx`             |
 | E2E (prod build)           | `pnpm e2e` · one project: `pnpm e2e --project=chromium`                      |
+| Performance budget (lab)   | `pnpm e2e --project=chromium e2e/performance.spec.ts`                        |
 | Unused code/deps           | `pnpm knip`                                                                  |
 | Everything before PR       | `pnpm verify` (check, types, tests, knip, build)                             |
 
@@ -44,7 +45,7 @@ docs/               architecture, decisions, deploy, recipes, tasks, agents
 ```
 
 Flow: `app/contact/page.tsx` → `views/ContactView` → `features/contact/ContactForm` + `components/*` + `ui/*`.
-Import features through their barrel (`@/features/contact`), never deep paths from outside the feature.
+Import features through their barrel (`@/features/contact`), never deep paths from outside the feature. Routes import a view by path (`@/views/HomeView`; Biome blocks `@/views`), and client components never import a barrel that pulls server-only or zod-heavy modules (`@/lib/api/errors`, not `@/lib/api`): barrels leak code into every page's bundle.
 
 ## Invariants
 
@@ -70,8 +71,18 @@ Deploying · applying migrations anywhere · using production credentials · rea
 - Explicit return types on exported functions and components.
 - Files ≤ 400 lines, functions ≤ 50 lines. Constants instead of magic numbers. Comments explain why, not what.
 - Server Components by default; `'use client'` only for state, effects, browser APIs or handlers, as low in the tree as possible.
-- `next/link` for internal links, `next/image` for images (LCP image gets `priority`, never lazy).
+- `next/link` for internal links, `next/image` for images: above the fold `loading="eager"` + `fetchPriority="high"` (`priority` is deprecated in Next 16), never lazy.
 - Native elements before ARIA. Every interactive element is keyboard reachable with a visible focus ring.
+
+## Performance
+
+Details and method: `docs/performance.md`.
+
+- Budgets: Core Web Vitals at p75 (LCP ≤ 2.5 s, INP ≤ 200 ms, CLS ≤ 0.1); home first-load JS ≤ 200 KB compressed, guarded by `e2e/performance.spec.ts`. Raising a budget needs a row in `docs/decisions.md`.
+- A change made for speed ships with before/after numbers under the same conditions (percentiles, not means). No measured win → revert it.
+- Every outbound call has a deadline (`apiFetch` `timeoutMs`, default 10 s); retry only idempotent requests.
+- Personal data responses: `Cache-Control: private, no-store`, never in a shared cache; cache and query keys include user/tenant and every parameter.
+- Lists: server pagination with a stable sort and a max page size; no N+1 queries; independent fetches run in parallel.
 
 ## Styling rules
 
@@ -122,6 +133,7 @@ Skills are installed agent skills (`~/.agents/skills`, shared by agents that sup
 | Next.js / React code                | `/next-best-practices`, `/vercel-react-best-practices`, `/vercel-composition-patterns`               |
 | UI design, tokens, polish           | `/impeccable`, `/frontend-design`, `/web-design-guidelines`, `/make-interfaces-feel-better`          |
 | E2E tests                           | `/playwright-best-practices`                                                                         |
+| Performance work                    | `/performance-optimization`, `/vercel-react-best-practices` (follow `docs/performance.md` method)    |
 | Auth, input handling, secrets       | `/security-best-practices`                                                                           |
 | Legal pages, consent, personal data | `/legal-kit` (plan before editing, for the target market)                                            |
 | Architecture decision               | `/engineering:architecture` (append to `docs/decisions.md`)                                          |

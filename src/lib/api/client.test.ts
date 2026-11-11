@@ -12,6 +12,15 @@ const mockFetch = (response: Response | Error): ReturnType<typeof vi.fn> => {
   return fn;
 };
 
+// Never resolves on its own; rejects only when the request signal aborts, like a stalled server.
+const hangingFetch = (): ReturnType<typeof vi.fn> =>
+  vi.fn(
+    (_url: string, init: RequestInit) =>
+      new Promise<Response>((_resolve, reject) => {
+        init.signal?.addEventListener('abort', () => reject(init.signal?.reason));
+      }),
+  );
+
 afterEach(() => {
   vi.unstubAllGlobals();
 });
@@ -64,6 +73,32 @@ describe('apiFetch', () => {
       (e: unknown) => e,
     );
     expect(error).toMatchObject({ code: 'validation' });
+  });
+
+  it('throws timeout ApiError when the server does not answer within timeoutMs', async () => {
+    vi.stubGlobal('fetch', hangingFetch());
+    const error = await apiFetch('/x', { baseUrl: 'https://api.test', timeoutMs: 10 }).catch(
+      (e: unknown) => e,
+    );
+    expect(error).toBeInstanceOf(ApiError);
+    expect(error).toMatchObject({ status: 0, code: 'timeout' });
+  });
+
+  it('passes an abort signal to fetch by default so every call has a deadline', async () => {
+    const fn = mockFetch(jsonResponse({ ok: true }));
+    await apiFetch('/x', { baseUrl: 'https://api.test' });
+    const [, init] = fn.mock.calls[0] as [string, RequestInit];
+    expect(init.signal).toBeInstanceOf(AbortSignal);
+  });
+
+  it('rethrows the caller abort unchanged so query cancellation is not an error', async () => {
+    vi.stubGlobal('fetch', hangingFetch());
+    const controller = new AbortController();
+    const pending = apiFetch('/x', { baseUrl: 'https://api.test', signal: controller.signal });
+    controller.abort();
+    const error = await pending.catch((e: unknown) => e);
+    expect(error).not.toBeInstanceOf(ApiError);
+    expect(error).toMatchObject({ name: 'AbortError' });
   });
 
   it('sends object bodies as JSON', async () => {

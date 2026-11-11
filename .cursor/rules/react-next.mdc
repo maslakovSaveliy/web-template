@@ -6,7 +6,7 @@ alwaysApply: false
 
 - Layers: `app/**/page.tsx` (thin: params, metadata, server fetch) → `views/<Name>View` (composition only) → `features/<domain>` (logic) → `components/` (shared blocks) → `ui/` (primitives).
 - Views never call APIs, use data hooks or hold business logic. If a view needs data, the page fetches it and passes props.
-- Features expose a barrel `index.ts`; outside code imports `@/features/<x>`, not deep paths.
+- Features expose a barrel `index.ts`; outside code imports `@/features/<x>`, not deep paths. Views have no barrel: routes import `@/views/<Name>View`.
 - Server Components by default. `'use client'` only where needed, pushed to leaves. No async client components.
 - Data: server data in Server Components or route handlers; client data via TanStack Query hooks inside the feature (`use-<thing>.ts`) calling `apiFetch` with a Zod `schema`.
 - Mutations: `useMutation` + route handler or server action validated with the same Zod schema as the form.

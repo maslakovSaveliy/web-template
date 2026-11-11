@@ -3,7 +3,8 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { type ReactNode, useState } from 'react';
-import { isApiError } from '@/lib/api';
+// Direct import: the barrel pulls apiFetch → clientEnv → zod into every page's client bundle.
+import { isApiError } from '@/lib/api/errors';
 
 const STALE_TIME_MS = 60_000;
 const MAX_RETRIES = 2;

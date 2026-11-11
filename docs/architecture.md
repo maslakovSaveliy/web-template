@@ -33,7 +33,7 @@ Browser ──► Next.js (RSC + route handlers) ──► [optional] Postgres /
 ## Data
 
 - Server data: Server Components / route handlers. Client server-state: TanStack Query hooks inside features, `apiFetch` with Zod schemas.
-- Errors cross the network boundary as `ApiError { code, status, details }`.
+- Errors cross the network boundary as `ApiError { code, status, details }` (`network`, `timeout`, `http`, `parse`, `validation`). Every request has a deadline (`timeoutMs`, default 10 s).
 - UI state: Zustand (not persisted unless harmless).
 - Persistence is not part of the template. Preferred: Postgres + Drizzle (in-app) or Prisma (in a NestJS backend). See recipes.
 
@@ -56,4 +56,4 @@ PR → CI (check, types, unit, knip, build; e2e on PRs) → image per commit sha
 
 ## Quality bars
 
-WCAG 2.2 AA (axe in CI + manual keyboard pass on key flows), Core Web Vitals at p75 (LCP ≤ 2.5 s, INP ≤ 200 ms, CLS ≤ 0.1).
+WCAG 2.2 AA (axe in CI + manual keyboard pass on key flows), Core Web Vitals at p75 (LCP ≤ 2.5 s, INP ≤ 200 ms, CLS ≤ 0.1), home first-load JS ≤ 200 KB compressed. Budgets, the measurement method and caching rules: `docs/performance.md`.

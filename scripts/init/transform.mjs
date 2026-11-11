@@ -131,6 +131,7 @@ pnpm dev
 - \`docs/agents/memory.md\`: shared project memory for all agents
 - \`docs/architecture.md\`: structure and boundaries
 - \`docs/decisions.md\`: decision log
+- \`docs/performance.md\`: budgets, measurement method, caching rules
 - \`docs/deploy.md\`: ${ci === 'gitlab' ? 'GitLab' : 'GitHub'} CI/CD and server setup
 - \`docs/recipes/\`: how to add a database, auth, payments and more
 `;

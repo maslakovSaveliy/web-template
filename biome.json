@@ -65,7 +65,15 @@
         "useImportType": "error",
         "useExportType": "error",
         "useConst": "error",
-        "noParameterAssign": "error"
+        "noParameterAssign": "error",
+        "noRestrictedImports": {
+          "level": "error",
+          "options": {
+            "paths": {
+              "@/views": "Import the view by path (@/views/HomeView): a views barrel puts every view's client components into every page's bundle."
+            }
+          }
+        }
       },
       "complexity": {
         "noExcessiveCognitiveComplexity": {

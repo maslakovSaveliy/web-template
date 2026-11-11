@@ -3,6 +3,8 @@ import { clientEnv } from '@/lib/env/client';
 import { ApiError } from './errors';
 
 const NO_CONTENT = 204;
+/** Every request gets a deadline: a stalled upstream must not hold a render or a spinner forever. */
+const DEFAULT_TIMEOUT_MS = 10_000;
 
 export interface ApiFetchOptions<T> {
   method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
@@ -13,6 +15,8 @@ export interface ApiFetchOptions<T> {
   /** Defaults to NEXT_PUBLIC_API_URL. */
   baseUrl?: string;
   credentials?: RequestCredentials;
+  /** Deadline for the whole request, body included. Defaults to `DEFAULT_TIMEOUT_MS`. */
+  timeoutMs?: number;
 }
 
 const joinUrl = (baseUrl: string, path: string): string => {
@@ -33,12 +37,22 @@ const readErrorBody = async (response: Response): Promise<unknown> => {
   }
 };
 
-const send = async (url: string, init: RequestInit): Promise<Response> => {
+// Checked by name, not `instanceof DOMException`: test DOMs and runtimes ship different classes.
+const isAbortError = (error: unknown): boolean =>
+  typeof error === 'object' && error !== null && 'name' in error && error.name === 'AbortError';
+
+const toTransportError = (error: unknown, deadline: AbortSignal): unknown => {
+  if (deadline.aborted) return new ApiError('timeout', 0, 'Request timed out', error);
+  // Caller cancellation (e.g. TanStack Query) is not a failure: rethrow it unchanged.
+  if (isAbortError(error)) return error;
+  return new ApiError('network', 0, 'Network request failed', error);
+};
+
+const send = async (url: string, init: RequestInit, deadline: AbortSignal): Promise<Response> => {
   try {
     return await fetch(url, init);
   } catch (error) {
-    if (error instanceof DOMException && error.name === 'AbortError') throw error;
-    throw new ApiError('network', 0, 'Network request failed', error);
+    throw toTransportError(error, deadline);
   }
 };
 
@@ -51,18 +65,23 @@ export async function apiFetch<T = unknown>(
   options: ApiFetchOptions<T> = {},
 ): Promise<T> {
   const { method = 'GET', body, schema, signal, credentials, baseUrl } = options;
+  const deadline = AbortSignal.timeout(options.timeoutMs ?? DEFAULT_TIMEOUT_MS);
   const headers = new Headers(options.headers);
   headers.set('accept', 'application/json');
   if (body !== undefined) headers.set('content-type', 'application/json');
 
   const url = joinUrl(baseUrl ?? clientEnv.NEXT_PUBLIC_API_URL, path);
-  const response = await send(url, {
-    method,
-    headers,
-    signal,
-    credentials,
-    body: body === undefined ? undefined : JSON.stringify(body),
-  });
+  const response = await send(
+    url,
+    {
+      method,
+      headers,
+      signal: signal ? AbortSignal.any([signal, deadline]) : deadline,
+      credentials,
+      body: body === undefined ? undefined : JSON.stringify(body),
+    },
+    deadline,
+  );
 
   if (!response.ok) {
     const details = await readErrorBody(response);
@@ -74,6 +93,7 @@ export async function apiFetch<T = unknown>(
   try {
     data = (await response.json()) as unknown;
   } catch (error) {
+    if (deadline.aborted || isAbortError(error)) throw toTransportError(error, deadline);
     throw new ApiError('parse', response.status, 'Response is not valid JSON', error);
   }
 
